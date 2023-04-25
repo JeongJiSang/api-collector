@@ -2,6 +2,7 @@ package com.jbground.url;
 
 import com.jbground.collector.APICollector;
 import com.jbground.collector.APICollectorFactory;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.net.URL;
@@ -26,15 +27,26 @@ class URLBuilderTest {
 
     @Test
     void createTest() throws Exception {
-        for (int i = 0; i < sample.length; i++) {
-            URLBuilder urlBuilder = new URLBuilder();
-            urlBuilder.setURL(sample[i]);
-            urlBuilder.setServiceKey("BHH3ALKp%2BnBJ8Zm6LqWe0FTii1jK72SzsQfyLQCGLGxRTEqEJnnOALcLEmjF2buJ04nKB4ncHnDFH4rotiy4vw%3D%3D");
-            urlBuilder.setFormat(URLBuilder.XML);
-            URL url = urlBuilder.build();
 
-            String s = answer[i];
-        }
+        URLBuilder urlBuilder = new URLBuilder(sample[0]);
+        urlBuilder.setFormat(URLBuilder.XML);
+        urlBuilder.setParameterData(ParameterType.PAGE, "1");
+        urlBuilder.setParameterData(ParameterType.ROW, "100");
+
+        URL url = urlBuilder.build();
+
+        Assertions.assertEquals(url.toString(), answer[0]);
+
+        urlBuilder = new URLBuilder(sample[1]);
+        urlBuilder.addServiceKey("BHH3ALKp%2BnBJ8Zm6LqWe0FTii1jK72SzsQfyLQCGLGxRTEqEJnnOALcLEmjF2buJ04nKB4ncHnDFH4rotiy4vw%3D%3D");
+        urlBuilder.setFormat(URLBuilder.XML);
+        urlBuilder.setParameterData(ParameterType.PAGE, "1");
+        urlBuilder.setParameterData(ParameterType.ROW, "100");
+
+        url = urlBuilder.build();
+
+        Assertions.assertEquals(url.toString(), answer[1]);
+
     }
 
 
@@ -42,7 +54,7 @@ class URLBuilderTest {
     void parseTest() throws Exception {
         URLBuilder urlBuilder = new URLBuilder();
         urlBuilder.setURL(sample[1]);
-        urlBuilder.setServiceKey("BHH3ALKp%2BnBJ8Zm6LqWe0FTii1jK72SzsQfyLQCGLGxRTEqEJnnOALcLEmjF2buJ04nKB4ncHnDFH4rotiy4vw%3D%3D");
+        urlBuilder.addServiceKey("BHH3ALKp%2BnBJ8Zm6LqWe0FTii1jK72SzsQfyLQCGLGxRTEqEJnnOALcLEmjF2buJ04nKB4ncHnDFH4rotiy4vw%3D%3D");
         urlBuilder.setFormat(URLBuilder.XML);
 
         APICollector collector = APICollectorFactory.createCollector(urlBuilder);

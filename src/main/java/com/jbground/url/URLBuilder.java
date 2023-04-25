@@ -1,6 +1,5 @@
 package com.jbground.url;
 
-import jdk.internal.org.objectweb.asm.tree.analysis.Value;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +49,8 @@ public class URLBuilder {
             if (token.hasMoreTokens()) {
                 StringTokenizer param = new StringTokenizer(token.nextToken(), "&");
                 while (param.hasMoreTokens()) {
-                    parameters.add(createParameter(param.nextToken()));
+                    Parameter parameter = new Parameter(param.nextToken());
+                    parameters.add(parameter);
                 }
             }
 
@@ -60,14 +60,7 @@ public class URLBuilder {
 
     }
 
-    public Parameter createParameter(String s) {
-        String[] arr = split(s, "=");
-
-        ParameterType parameterType = PropUtil.findParameterType(arr[0]);
-        return new Parameter(arr[0], arr[1], parameterType);
-    }
-
-    public void setServiceKey(String value) {
+    public void addServiceKey(String value) {
         Parameter target = findParameterByType(ParameterType.SERVICE);
         if(target != null){
             target.setValue(value);
@@ -91,6 +84,12 @@ public class URLBuilder {
         } else {
             this.format = form;
         }
+    }
+
+    public void setParameterData(ParameterType type, String value) {
+        Parameter parameterByType = findParameterByType(type);
+        assert parameterByType != null;
+        parameterByType.setValue(value);
     }
 
     public void setResponse(String[] arr) {
@@ -127,15 +126,6 @@ public class URLBuilder {
             return new URL(pathString);
         else
             return new URL(pathString + "?" + queryString);
-    }
-
-
-    public String toString() {
-        try {
-            return build().toString();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public Set<String> getResponseSet() {
@@ -176,18 +166,5 @@ public class URLBuilder {
         if (!urlValidator.isValid(url)) {
             throw new MalformedURLException("URL is not valid.");
         }
-    }
-
-    private String[] split(String input, String regex) {
-        String[] arr = input.split(regex);
-
-        if (arr.length == 2)
-            return arr;
-
-        String[] newArray = new String[arr.length + 1];
-        System.arraycopy(arr, 0, newArray, 0, arr.length);
-        newArray[arr.length] = "";
-
-        return newArray;
     }
 }

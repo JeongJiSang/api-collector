@@ -8,7 +8,6 @@ public class APICollector {
 
     private Parser parser;
 
-
     private Set<String> response;
 
     public List<Map<String, String>> collect() {

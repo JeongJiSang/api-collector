@@ -8,12 +8,7 @@ import com.jbground.parser.xml.CommonSaxHandler;
 import com.jbground.parser.xml.CommonSaxParser;
 import com.jbground.url.URLBuilder;
 
-import java.util.Set;
-
 public class APICollectorFactory {
-
-    private Set<String> response;
-    private int index;
 
     public static APICollector createCollector(URLBuilder builder){
         APICollector collector = new APICollector();
@@ -22,15 +17,14 @@ public class APICollectorFactory {
 
         switch (builder.getFormat()) {
             case JSON:
-                parser = new CommonJsonParser(new CommonJsonHandler(response), index);
+                parser = new CommonJsonParser(new CommonJsonHandler(builder.getResponseSet()));
             case XML:
-                parser =  new CommonSaxParser(new CommonSaxHandler(response), index);
+                parser =  new CommonSaxParser(new CommonSaxHandler(builder.getResponseSet()));
             case ATTR:
-                parser = new AttributeSaxParser(new AttributeSaxHandler(response), index);
+                parser = new AttributeSaxParser(new AttributeSaxHandler(builder.getResponseSet()));
             default:
-                parser = new CommonSaxParser(new CommonSaxHandler(response), index);
+                parser = new CommonSaxParser(new CommonSaxHandler(builder.getResponseSet()));
         }
-
 
         collector.setParser(parser);
         collector.setResponse(builder.getResponseSet());
