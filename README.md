@@ -5,7 +5,8 @@ JSON/XML로 제공되는 API의 데이터를 수집하여 Object 데이터로 �
 *****
 
 <img src="api-collector.jpg" width="100%" height="50%"></img>
-
+******
+사용법
 ```
 URLBuilder urlBuilder = new URLBuilder("https://portal.nrich.go.kr/kor/openapi.do?idx=8&firstindex=xx&recordcountperpage=xx");
 urlBuilder.setFormat(URLBuilder.XML);
